@@ -91,8 +91,7 @@ clf('reset');
 
 % Check specs for r -> y
 figure(1);
-step(cl); grid on;
-title('Step Response of Output due to Reference'); xlabel('Time'); ylabel('y'); grid on;
+step(cl)
 
 figure(2);
 margin(ol);
@@ -109,10 +108,10 @@ figure(3);
 hold on
 plot(step(u_r),'b');
 plot(step(u_d),'r');
-plot(step_u_rd,'y');
+plot(step_u_rd,'');
 hold off
 title('Step Response of Input');
-xlabel('Time'); ylabel('u'); ylim([0,1.2]); grid on;
+xlabel('Time'); ylabel('u'); ylim([0,1.2])
 legend('Response to Reference Step of 1', 'Response to Disturbance Step of -1', 'Response to Reference & Disturbance Steps of 1 & -1')
 
 % Check specs for d -> y
@@ -123,7 +122,6 @@ hold on
 title('Step Response of Output due to Disturbance');
 xlabel('Time');
 ylabel('y');
-grid on;
 
 
 hold off
