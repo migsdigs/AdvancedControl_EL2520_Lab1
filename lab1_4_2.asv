@@ -8,12 +8,12 @@ G_d = 10/(s+1);
 
 %% 4.2.1
 % Improper Design
-F_y_1 = G^-1 * ((Wcp+2)/s);
+F_y_1 = G^-1 * ((Wcp)/s);
 
 % Proper Design
 % Pole to make it proper
 pole_place = 10*Wcp;
-F_y_2 = F_y_1*(pole_place/(s+pole_place)^2);
+F_y_2 = F_y_1*(pole_place^2/(s+pole_place)^2);
 ol = F_y_2*G;
 
 margin(ol);
@@ -52,7 +52,7 @@ margin(ol_4)
 
 
 %% 4.2.3
-tau = 0.125;
+tau = 0.135;
 Fr = 1/(1+tau*s);
 
 Fy = F_y_4;
@@ -63,10 +63,10 @@ ol = Fy*G;
 
 %lead compensation
 
-wc_desired = 25;
+wc_desired = 13;
 pm_desired = 60;
 
-beta = 0.47;
+beta = 0.8;
 tau_d = 1/(wc_desired*sqrt(beta));
 
 F_lead = (tau_d*s + 1)/(beta*tau_d*s + 1);
@@ -74,24 +74,29 @@ F_lead = (tau_d*s + 1)/(beta*tau_d*s + 1);
 % Solve for K
 gain = evalfr(G*F_lead*Fy,wc_desired*1i);
 K = 1/norm(gain);
+% K = 0.72;
 
 F_lead = K*F_lead;
 
+Fy_lead = F_lead*Fy;
+
 % end lead compensation
 
-ol = F_lead*Fy*G;
+ol = Fy_lead*G;
 cl = Fr*(ol)/(1+ol);
 
 S = 1/(1+ol);
-u_r = Fy*Fr*S;
-u_d = Fy*Gd*S;
+T = 1-S;
+u_r = Fy_lead*Fr*S;
+u_d = Fy_lead*Gd*S;
 
 
 clf('reset');
 
 % Check specs for r -> y
 figure(1);
-step(cl)
+step(cl); grid on;
+title('Step Response of Output due to Reference'); xlabel('Time'); ylabel('y'); grid on;
 
 figure(2);
 margin(ol);
@@ -108,24 +113,31 @@ figure(3);
 hold on
 plot(step(u_r),'b');
 plot(step(u_d),'r');
-plot(step_u_rd,'');
+plot(step_u_rd,'k');
 hold off
 title('Step Response of Input');
-xlabel('Time'); ylabel('u'); ylim([0,1.2])
+xlabel('Time'); ylabel('u'); ylim([0,1.2]); grid on;
 legend('Response to Reference Step of 1', 'Response to Disturbance Step of -1', 'Response to Reference & Disturbance Steps of 1 & -1')
 
-% Check specs for d -> y
-figure(4);
-d_to_y = Gd/(1+ol);
-step(d_to_y)
-hold on
-title('Step Response of Output due to Disturbance');
-xlabel('Time');
-ylabel('y');
+% % Check specs for d -> y
+% figure(4);
+% d_to_y = Gd/(1+ol);
+% step(d_to_y)
+% hold on
+% title('Step Response of Output due to Disturbance');
+% xlabel('Time');
+% ylabel('y');
+% grid on;
+% hold off
 
-
-hold off
-
+% Check Sensitivity and Complementary Sensitivity
+% figure(5);
+% hold on;
+% margin(S);
+% margin(T);
+% hold off;
+% title('Bode Diagram of S and T');
+% legend('Sensitivity, S', 'Complementary Sensitivity, T')
 
 
 
