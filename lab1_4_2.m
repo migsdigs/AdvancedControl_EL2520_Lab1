@@ -104,19 +104,19 @@ margin(ol);
 stepinfo(cl)
 
 % Check specs for u -> y
-[step_u_r,time_r] = step(u_r, 0.6);
-[step_u_d,time_d] = step(u_d, 0.6);
+[step_u_r,time_r] = step(u_r, 10);
+[step_u_d,time_d] = step(u_d, 10);
 step_u_rd = step_u_r + step_u_d;
 time = time_r;
 
 figure(3);
 hold on
-plot(step(u_r),'b');
-plot(step(u_d),'r');
-plot(step_u_rd,'k');
+plot(time_r,step_u_r,'b');
+plot(time_d,step_u_d,'r');
+plot(time,step_u_rd,'k');
 hold off
 title('Step Response of Input');
-xlabel('Time'); ylabel('u'); ylim([0,1.2]); grid on;
+xlabel('Time'); ylabel('u'); ylim([0,1.2]); xlim([0,1]); grid on;
 legend('Response to Reference Step of 1', 'Response to Disturbance Step of -1', 'Response to Reference & Disturbance Steps of 1 & -1')
 
 % Check specs for d -> y
